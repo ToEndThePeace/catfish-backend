@@ -113,17 +113,19 @@ router.post('/game', (req, res) => {
 
 //// Posts
 // #region GET Posts
-router.get("/game/:inst/post", (req, res) => {
+router.get("/game/:inst/feed", (req, res) => {
     //Get all posts from a certain game instance
+    //This will basically be our news feed and will show posts and comments
     let tempRes = tempPosts.filter(x => {
         return x.instance_id == req.params.inst;
     })
     //Include pagination
     
-    res.json(tempRes);
+    res.json(tempRes);                
 })
 router.get("/game/:inst/post/:id", (req, res) => {
     //Get all posts from a certain profile
+    //This would be used when viewing a profile to see their post history
     let tempRes = tempPosts.filter(x => {
         return x.instance_id == req.params.inst &&
                x.profile_id  == req.params.id;
@@ -151,8 +153,27 @@ router.post("/game/:inst/post", (req, res) => {
 
 //// Comments
 // #region GET Comments
+router.get("/game/:inst/", (req, res) => {
+    //Get all comments for a specific post
+    //Include pagination
+    
+    res.json(tempRes);
+})
 // #endregion GET Comments
 // #region POST Comments
-// #endregion POST Comments
+router.post("/game/:inst/post", (req, res) => {
+    tempPosts.push({
+        post_id        : numPosts++,
+        post_content   : req.body.content,
+        post_image_url : req.body.img,
+        post_timestamp : req.body.time,
+        instance_id    : req.body.inst,
+        profile_id     : req.body.prof
+    });
+    res.json({
+        id : numPosts - 1,
+    });
+})
+// #endregion POST Posts
 
 module.exports = router;
