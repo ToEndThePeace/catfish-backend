@@ -17,12 +17,12 @@ router.post("/:inst_id", (req, res) => {
     const about = req.body.bio;
     const dob = req.body.dob;
 
+    // Store the profile info in data_profiles
+
     // Store the id index from the database
     const newProfID = 1; //*****Change the 1*****
     
     // Store the image sent up as well???
-
-    // Store the profile info in data_profiles
 
     // Add a new entry into xref_new_profile to map the user,
     // instance, and profile together
@@ -67,6 +67,13 @@ router.get("/:inst_id/:prof_id", (req, res) => {
 
     // Send back the profile object in JSON
     res.json(curProf);
+
+    /* 
+        What this in reality needs to do is to query the db,
+        and send back an array of objects - the first object 
+        being the profile object, and the rest being the
+        posts associated with the given profile
+    */
 })
 
 module.exports = router;

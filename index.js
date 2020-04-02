@@ -15,6 +15,7 @@ server.use(express.json());
 server.use("/test", testRoutes);
 server.use("/inst", instanceRoutes);
 server.use("/prof", profileRoutes);
+server.use("/feed", postRoutes);
 
 server.use("/", (req, res) => {
   res.status(200).send("Hello World!!");
