@@ -132,10 +132,21 @@ router.post("/:inst_id/new/:prof_id", (req, res) => {
     // Add new entry to xref_new_post,
     // mapping profile and post together
 
-    // Return the index of the new profile
+    // Return the index of the new post
     res.json(newPostID);
 });
 
 // POST new reaction on a post
+router.post("/:inst_id/new/:prof_id/:react_id", (req, res) => {
+    // Pull from params
+    const inst_id  = req.params.inst_id;
+    const prof_id  = req.params.prof_id;
+    const react_id = req.params.react_id;
+
+    // Store react info info in xref_post_likes
+
+    // Nothing to return?
+    res.status(200);
+});
 
 module.exports = router;
