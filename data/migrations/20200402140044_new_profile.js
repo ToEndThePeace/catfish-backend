@@ -8,18 +8,21 @@ exports.up = function(knex) {
       .unsigned()
       .notNullable();
     table
-      .foreign("user_id")
-      .references("data_users.user_id")
+      .integer("user_id")
+      .references("user_id")
+      .inTable("data_users")
       .onUpdate("CASCADE")
       .onDelete("CASCADE");
     table
-      .foreign("instance_id")
-      .references("data_instances.instance_id")
+      .integer("instance_id")
+      .references("instance_id")
+      .inTable("data_instances")
       .onUpdate("CASCADE")
       .onDelete("CASCADE");
     table
-      .foreign("profile_id")
-      .references("data_profiles.profile_id")
+      .integer("profile_id")
+      .references("profile_id")
+      .inTable("data_profiles")
       .onUpdate("CASCADE")
       .onDelete("CASCADE");
   });

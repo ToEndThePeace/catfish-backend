@@ -8,19 +8,22 @@ exports.up = function(knex) {
       .unsigned()
       .notNullable();
     table
-      .foreign("post_id")
-      .references("data_posts.post_id")
+      .integer("post_id")
+      .references("post_id")
+      .inTable("data_posts")
       .onUpdate("CASCADE")
       .onDelete("CASCADE");
     table
-      .foreign("profile_id")
-      .references("data_profiles.profile_id")
+      .integer("profile_id")
+      .references("profile_id")
+      .inTable("data_profiles")
       .onUpdate("CASCADE")
       .onDelete("CASCADE");
     table.timestamp("timestamp").defaultTo(knex.fn.now());
     table
-      .foreign("type_id")
-      .references("enum_react_types.react_id")
+      .integer("type_id")
+      .references("react_id")
+      .inTable("enum_react_types")
       .onUpdate("CASCADE")
       .onDelete("CASCADE");
   });
