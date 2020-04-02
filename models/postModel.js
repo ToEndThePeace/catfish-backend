@@ -1,0 +1,50 @@
+const db = require("../data/dbConfig");
+
+async function addPost(post) {
+  const newPost = await db("data_posts")
+    .insert(post)
+    .returning("*")
+    .then(data => data[0]);
+  return newPost;
+}
+
+async function getPosts() {
+  const posts = await db("data_posts")
+    .join("xref_new_post", "xref_new_post.post_id", "data_posts.post_id")
+    .join(
+      "data_profiles",
+      "data_profiles.profile_id",
+      "xref_new_post.profile.id"
+    )
+    .select(
+      "data_posts.post_content",
+      "data_posts.post_image_url",
+      "data_posts.post_timestamp"
+    );
+
+  return posts;
+}
+
+async function getPostsbyProfileId(id) {
+  const posts = await db("data_posts")
+    .join("xref_new_post", "xref_new_post.post_id", "data_posts.post_id")
+    .join(
+      "data_profiles",
+      "data_profiles.profile_id",
+      "xref_new_post.profile.id"
+    )
+    .select(
+      "data_posts.post_content",
+      "data_posts.post_image_url",
+      "data_posts.post_timestamp"
+    )
+    .where("data_profiles.profile_id", id);
+
+  return posts;
+}
+
+module.exports = {
+  addPost,
+  getPosts,
+  getPostsbyProfileId
+};
