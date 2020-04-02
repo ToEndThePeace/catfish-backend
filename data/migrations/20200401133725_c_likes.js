@@ -9,17 +9,20 @@ exports.up = function(knex) {
       .notNullable();
     table
       .foreign("comment_id")
-      .unsigned()
-      .references("data_comments.comment_id");
+      .references("data_comments.comment_id")
+      .onUpdate("CASCADE")
+      .onDelete("CASCADE");
     table
       .foreign("profile_id")
-      .unsigned()
-      .references("data_profiles.profile_id");
+      .references("data_profiles.profile_id")
+      .onUpdate("CASCADE")
+      .onDelete("CASCADE");
     table.timestamp("timestamp").defaultTo(knex.fn.now());
     table
       .foreign("type_id")
-      .unsigned()
-      .references("enum_react_types.react_id");
+      .references("enum_react_types.react_id")
+      .onUpdate("CASCADE")
+      .onDelete("CASCADE");
   });
 };
 

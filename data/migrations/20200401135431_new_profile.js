@@ -9,16 +9,19 @@ exports.up = function(knex) {
       .notNullable();
     table
       .foreign("user_id")
-      .unsigned()
-      .references("data_users.user_id");
+      .references("data_users.user_id")
+      .onUpdate("CASCADE")
+      .onDelete("CASCADE");
     table
       .foreign("instance_id")
-      .unsigned()
-      .references("data_instances.instance_id");
+      .references("data_instances.instance_id")
+      .onUpdate("CASCADE")
+      .onDelete("CASCADE");
     table
       .foreign("profile_id")
-      .unsigned()
-      .references("data_profiles.profile_id");
+      .references("data_profiles.profile_id")
+      .onUpdate("CASCADE")
+      .onDelete("CASCADE");
   });
 };
 
