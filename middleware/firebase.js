@@ -13,7 +13,7 @@ module.exports = {
         admin.auth().verifyIdToken(token)
             .then(function(decodedToken) {
                 let uid = decodedToken.uid;
-                console.log(uid)
+                req.uid = uid
                 next();
             }).catch(function(error) {
                 console.log(error)
