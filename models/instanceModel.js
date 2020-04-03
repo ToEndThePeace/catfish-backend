@@ -8,6 +8,14 @@ async function addInstance(instance) {
   return newInstance;
 }
 
+async function findInstance(id) {
+  const instance = await db("data_instances").where(
+    "data_instances.instance_id",
+    id
+  );
+  return instance;
+}
+
 async function getInstancebyId(id) {
   const instance = await db("data_instances")
     .where("instance_id", id)
@@ -26,5 +34,6 @@ async function getInstances() {
 module.exports = {
   addInstance,
   getInstancebyId,
-  getInstances
+  getInstances,
+  findInstance
 };
