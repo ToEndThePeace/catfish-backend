@@ -21,8 +21,10 @@
   "homepage": "https://github.com/ToEndThePeace/catfish-backend#readme",
   "dependencies": {
     "cloudinary": "^1.21.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "helmet": "^3.22.0",
     "knex": "^0.20.13",
     "multer": "^1.4.2",
     "multer-storage-cloudinary": "^2.2.1",
