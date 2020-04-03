@@ -20,7 +20,10 @@ module.exports = {
             req.user = user;
             next();
         } else {
-            res.redirect('/login');
+            res.status(401).json({
+                status: 401,
+                message: "Unauthenticated"
+            });
         }
     }
 }

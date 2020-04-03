@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 
 const routes = require("../routes");
+const firebase = require("../middleware/firebase")
 
 const server = express();
 
@@ -11,6 +12,7 @@ server.use(helmet());
 server.use(express.json());
 server.use(cors());
 
+server.use("/api", firebase.isAuthenticated);
 server.use("/api", routes);
 
 server.get("/", (req, res) => {
