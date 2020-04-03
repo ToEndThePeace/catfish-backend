@@ -1,6 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const userFunc = require("../models/userModel");
+const { addUser } = require("../models/userModel");
+const { getUserbyId } = require("../models/userModel");
+const { updateUser } = require("../models/userModel");
 
 const router = express.Router();
 
@@ -18,23 +20,22 @@ router.post("/", (req, res) => {
   // store user details in database
   if (req.uid === body.id) {
     // User is authenticated and we can store their info?
-    const newUser = userFunc.addUser({
+    addUser({
       user_id: body.id,
       email: email,
       fname: firstName,
       lname: lastName,
       phone: phone,
-    });
-    if (newUser) {
-      // Created successfully
-      res.status(201).json(newUser);
-    } else {
-      // Failed
-      res.status(400).json({
-        status: 400,
-        message: "User creation failed",
+    })
+      .then((user) => {
+        res.status(201).json(user);
+      })
+      .catch((err) => {
+        res.status(400).json({
+          status: 400,
+          message: err,
+        });
       });
-    }
   } else {
     // Error? User isn't authenticated
     res.status(403).json({
@@ -46,18 +47,16 @@ router.post("/", (req, res) => {
 
 // Get User By ID
 router.get("/:id", (req, res) => {
-  const curID = req.params.id;
-
-  const response = userFunc.getUserbyId(curID);
-  // Not sure if this is correct? *****
-  if (response) {
-    res.status(200).json(response);
-  } else {
-    res.status(404).json({
-      status: 404,
-      message: `User doesn't exist`,
+  getUserbyId(req.params.id)
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      res.status(400).json({
+        status: 404,
+        message: err,
+      });
     });
-  }
 });
 
 // Update Existing User
@@ -68,17 +67,16 @@ router.patch("/:id", (req, res) => {
    *   email: "<newemail>"
    * }
    *********** */
-  const changes = req.params.body;
-
-  const response = userFunc.updateUser(changes, id);
-  if (response) {
-    res.status(201).json(response);
-  } else {
-    res.status(400).json({
-      status: 400,
-      message: "Update failed"
+  updateUser(req.body, req.params.id)
+    .then(user => {
+      res.status(201).json(user);
     })
-  }
+    .catch(err => {
+      res.status(400).json({
+        status: 400,
+        message: err
+      })
+    })
 });
 
 module.exports = router;

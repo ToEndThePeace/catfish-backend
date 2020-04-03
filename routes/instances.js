@@ -27,7 +27,7 @@ router.post("/", (req, res) => {
   //   res.json(instID);
 });
 
-// GET instances linked to a certain profile
+// GET instances linked to a certain user
 router.get("/:uid", (req, res) => {
   // Pull the id parameter out of the url
   const curID = req.params.uid;
