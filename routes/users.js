@@ -47,7 +47,8 @@ router.post("/", (req, res) => {
 
 // Get User By ID
 router.get("/:id", (req, res) => {
-  getUserbyId(req.params.id)
+  const getId = req.params.id;
+  getUserbyId({ getId })
     .then((user) => {
       res.status(200).json(user);
     })
@@ -68,15 +69,15 @@ router.patch("/:id", (req, res) => {
    * }
    *********** */
   updateUser(req.body, req.params.id)
-    .then(user => {
+    .then((user) => {
       res.status(201).json(user);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(400).json({
         status: 400,
-        message: err
-      })
-    })
+        message: err,
+      });
+    });
 });
 
 module.exports = router;

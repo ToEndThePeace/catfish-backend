@@ -27,6 +27,8 @@ async function updateUser(changes, id) {
 
 // I don't think we need this, ******
 // we're pulling PROFILES not necessarily users
+// What would be more useful would be the ability
+// to get all instances related to a user
 async function getUsersInInstance(id) {
   const users = await db("data_users")
     .join("xref_new_profile", "data_users.id", "xref_new_profile.user_id")
