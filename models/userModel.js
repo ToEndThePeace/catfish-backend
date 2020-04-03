@@ -4,14 +4,14 @@ async function addUser(user) {
   const newUser = await db("data_users")
     .insert(user)
     .returning("*")
-    .then(data => data[0]);
+    .then((data) => data[0]);
   return newUser;
 }
 
 async function getUserbyId(id) {
   const user = await "data_users"
     .where("user_id", id)
-    .select("username", "email", "fname", "lname", "image_url")
+    .select("phone", "email", "fname", "lname", "image_url")
     .first();
   return user;
 }
@@ -20,13 +20,13 @@ async function updateUser(changes, id) {
   const user = await db("data_users")
     .where({ id })
     .update(changes)
-    .returning(["username", "email", "fname", "lname", "image_url"])
-    .then(update => update[0]);
+    .returning(["email", "fname", "lname", "image_url"])
+    .then((update) => update[0]);
   return user;
 }
 
-const db = require("../data/dbConfig");
-
+// I don't think we need this, ******
+// we're pulling PROFILES not necessarily users
 async function getUsersInInstance(id) {
   const users = await db("data_users")
     .join("xref_new_profile", "data_users.id", "xref_new_profile.user_id")
@@ -36,7 +36,6 @@ async function getUsersInInstance(id) {
       "xref_new_profile.instance_id"
     )
     .select(
-      "data_users.username",
       "data_users.email",
       "data_users.fname",
       "data_users.lname",
@@ -51,5 +50,5 @@ module.exports = {
   addUser,
   getUserbyId,
   updateUser,
-  getUsersInInstance
+  getUsersInInstance,
 };
