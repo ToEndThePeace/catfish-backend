@@ -9,7 +9,7 @@ async function addProfile(profile) {
 }
 
 async function getProfilesByInstanceId(id) {
-  const profile = await db("data_profiles")
+  const profiles = await db("data_profiles")
     .join(
       "xref_new_profile",
       "xref_new_profile.profile_id",
@@ -27,6 +27,7 @@ async function getProfilesByInstanceId(id) {
       "data_profiles.pic_url"
     )
     .where("data_instances.instance_id", id);
+  return profiles;
 }
 
 module.exports = {

@@ -1,6 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const { addProfile } = require("../models/profileModel");
+const {
+  addProfile,
+  getProfilesByInstanceId
+} = require("../models/profileModel");
 const { findInstance } = require("../models/instanceModel");
 const upload = require("../utils/cloudinary");
 const router = express.Router();
@@ -59,23 +62,36 @@ router.post("/:inst_id", upload.single("pic_url"), async (req, res) => {
 });
 
 // GET all profiles linked to a game instance
-router.get("/:inst_id", (req, res) => {
+router.get("/:inst_id", async (req, res) => {
   // Pull instance ID from parameter
   const inst_id = req.params.inst_id;
 
   // Query the database to return an array of profile objects
-  const instProfs = [
-    {
-      display_name: "Barbra Streisand",
-      about: "If you know, you know",
-      dob: "Some date"
-      // Then somehow pull the picture URL from our cloud storage?
-    },
-    {}
-  ];
+
+  // Verify game instance before storing data
+  try {
+    const instance = await findInstance(inst_id);
+
+    // Store the profile info in data_profiles
+    if (!instance || !instance.length) {
+      res
+        .status(400)
+        .json({ errorMessage: "No instance of that id available" });
+    } else {
+      getProfilesByInstanceId(inst_id)
+        .then(profiles => {
+          res.status(200).json(profiles);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  } catch (error) {
+    console.log(error);
+  }
 
   // send back the array of profile objects in json
-  res.json(instProfs);
+  //   res.json(instProfs);
 });
 
 // GET a profile by id within a game instance
