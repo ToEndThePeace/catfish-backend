@@ -5,9 +5,9 @@ const express = require("express");
 
 //Dev enpoint testing
 const testRoutes = require("./testing/testRoutes");
-
-const instanceRoutes = require("./requests/instanceRoutes");
-const profileRoutes  = require("./requests/profileRoutes");
+const instanceRoutes = require("./routes/instances");
+const profileRoutes = require("./routes/profiles");
+const postRoutes = require("./routes/posts");
 
 const server = express();
 
