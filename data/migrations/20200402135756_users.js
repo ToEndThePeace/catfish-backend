@@ -15,6 +15,7 @@ exports.up = function(knex) {
     table.string("password").notNullable();
     table.string("fname").notNullable();
     table.string("lname").notNullable();
+    table.specificType("image_url", "text ARRAY");
   });
 };
 
