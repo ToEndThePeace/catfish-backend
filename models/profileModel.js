@@ -28,6 +28,7 @@ async function getProfilesByInstanceId(id) {
       "xref_new_profile.instance_id"
     )
     .select(
+      "data_profiles.profile_id",
       "data_profiles.display_name",
       "data_profiles.about",
       "data_profiles.dob",
