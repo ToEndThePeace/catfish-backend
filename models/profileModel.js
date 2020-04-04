@@ -1,10 +1,17 @@
 const db = require("../data/dbConfig");
 
-async function addProfile(profile) {
+async function addProfile(profile, ref) {
   const newProfile = await db("data_profiles")
     .insert(profile)
     .returning("*")
     .then(data => data[0]);
+
+  //add entry to reference table
+  await db("xref_new_profile").insert({
+    instance_id: ref.instance_id,
+    user_id: ref.user_id,
+    profile_id: newProfile.profile_id
+  });
   return newProfile;
 }
 

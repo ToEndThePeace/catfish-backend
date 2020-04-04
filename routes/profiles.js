@@ -15,8 +15,14 @@ router.use(bodyParser.json());
 // Should run automatically after a new instance is created (ideally)
 router.post("/:inst_id", upload.single("pic_url"), async (req, res) => {
   // Pull the instance id from parameter
-
   const inst_id = req.params.inst_id;
+  // Pull user_id from token
+  const user_id = 1;
+
+  const ref = {
+    instance_id: inst_id,
+    user_id
+  };
 
   // Pull profile information from the body
 
@@ -37,7 +43,7 @@ router.post("/:inst_id", upload.single("pic_url"), async (req, res) => {
         .status(400)
         .json({ errorMessage: "No instance of that id available" });
     } else {
-      addProfile(profile)
+      addProfile(profile, ref)
         .then(newProfile => {
           res.status(201).json(newProfile);
         })
