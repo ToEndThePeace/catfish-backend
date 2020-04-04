@@ -38,7 +38,26 @@ async function getProfilesByInstanceId(id) {
   return profiles;
 }
 
+async function getProfileWithPosts(id) {
+  const profile = await db("data_profiles")
+    .where("data_profiles.profile_id", id)
+    .first();
+  const posts = await db("data_posts")
+    .join("xref_new_post", "xref_new_post.post_id", "data_posts.post_id")
+    .select(
+      "data_posts.post_id",
+      "data_posts.post_content",
+      "data_posts.post_image_url",
+      "data_posts.post_timestamp"
+    )
+    .where("xref_new_post.profile_id", id);
+  console.log(profile);
+
+  return { ...profile, posts };
+}
+
 module.exports = {
   addProfile,
-  getProfilesByInstanceId
+  getProfilesByInstanceId,
+  getProfileWithPosts
 };
