@@ -6,10 +6,8 @@ const router = express.Router();
 router.use(bodyParser.urlencoded({extended: false}));
 router.use(bodyParser.json());
 
-// GET newsfeed
-
 // POST a new comment
-router.post("/:inst_id/new/:prof_id/c/:post_id", (req, res) => {
+router.post("/:inst_id/new/:prof_id/:post_id", (req, res) => {
     // Pull from params
     const inst_id = req.params.inst_id;
     const prof_id = req.params.prof_id;
@@ -32,14 +30,14 @@ router.post("/:inst_id/new/:prof_id/c/:post_id", (req, res) => {
 });
 
 // POST new reaction on a post
-router.post("/:inst_id/new/:prof_id/c/:comment_id/:react_id", (req, res) => {
+router.post("/:inst_id/new/:prof_id/:comment_id/:react_id", (req, res) => {
     // Pull from params
     const inst_id    = req.params.inst_id;
     const prof_id    = req.params.prof_id;
     const comment_id = req.params.comment_id;
     const react_id   = req.params.react_id;
 
-    // Store react info info in xref_comment_likes
+    // Store react info in xref_comment_likes
 
     // Nothing to return??
     res.status(200);
