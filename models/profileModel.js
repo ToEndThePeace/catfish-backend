@@ -51,7 +51,6 @@ async function getProfileWithPosts(id) {
       "data_posts.post_timestamp"
     )
     .where("xref_new_post.profile_id", id);
-  console.log(profile);
 
   return { ...profile, posts };
 }
