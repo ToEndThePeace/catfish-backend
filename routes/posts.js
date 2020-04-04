@@ -1,19 +1,20 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-
+const { addPost } = require("../models/postModel");
+const upload = require("../utils/cloudinary");
 const router = express.Router();
 
-router.use(bodyParser.urlencoded({extended: false}));
+router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
 // GET newsfeed
 // - all posts and comments in an instance - paginated
 router.get("/:inst_id", (req, res) => {
-    // Pull parameters
-    const inst_id = req.params.inst_id;
+  // Pull parameters
+  const inst_id = req.params.inst_id;
 
-    // #region notes
-    /* 
+  // #region notes
+  /* 
         Here's the newsfeed query. We need to pull a feed of all
         of the posts, comments, and profiles for it to look good.
 
@@ -103,29 +104,55 @@ router.get("/:inst_id", (req, res) => {
         >>> ]
 
     */
-    // #endregion notess
-    
-    // Big complex database query w/ pagination
-    const newsfeed = [[/* profiles */], [/* posts */]];
+  // #endregion notess
 
-    // return the newsfeed array object
-    res.send(newsfeed);
+  // Big complex database query w/ pagination
+  const newsfeed = [
+    [
+      /* profiles */
+    ],
+    [
+      /* posts */
+    ]
+  ];
+
+  // return the newsfeed array object
+  res.send(newsfeed);
 });
 
 // POST a new post
-router.post("/:inst_id/new/:prof_id", (req, res) => {
+router.post(
+  "/:inst_id/new/:prof_id",
+  upload.single("post_image_url"),
+  (req, res) => {
     // Pull from params
     const inst_id = req.params.inst_id;
     const prof_id = req.params.prof_id;
 
     // Pull the post info from the body
-    const post_content   = req.body.content;
+    const post_content = req.body.content;
     const post_timestamp = req.body.time;
+
+    const post = {
+      post_content: req.body.content,
+      post_image_url: !req.file ? "" : req.file.secure_url
+    };
+
+    const refs = {
+      profile_id: prof_id
+    };
 
     // Store the image? ~optional~
 
     // Store post info in data_posts
 
+    addPost(post, refs)
+      .then(post => {
+        res.status(201).json(post);
+      })
+      .catch(err => {
+        console.log(err);
+      });
     // Store the new id index from db
     const newPostID = 1; //*****change later*****
 
@@ -133,20 +160,21 @@ router.post("/:inst_id/new/:prof_id", (req, res) => {
     // mapping profile and post together
 
     // Return the index of the new post
-    res.json(newPostID);
-});
+    //   res.json(newPostID);
+  }
+);
 
 // POST new reaction on a post
 router.post("/:inst_id/new/:prof_id/:react_id", (req, res) => {
-    // Pull from params
-    const inst_id  = req.params.inst_id;
-    const prof_id  = req.params.prof_id;
-    const react_id = req.params.react_id;
+  // Pull from params
+  const inst_id = req.params.inst_id;
+  const prof_id = req.params.prof_id;
+  const react_id = req.params.react_id;
 
-    // Store react info info in xref_post_likes
+  // Store react info info in xref_post_likes
 
-    // Nothing to return?
-    res.status(200);
+  // Nothing to return?
+  res.status(200);
 });
 
 module.exports = router;

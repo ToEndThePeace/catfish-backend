@@ -1,10 +1,15 @@
 const db = require("../data/dbConfig");
 
-async function addPost(post) {
+async function addPost(post, ref) {
   const newPost = await db("data_posts")
     .insert(post)
     .returning("*")
     .then(data => data[0]);
+
+  await db("xref_new_post").insert({
+    profile_id: ref.profile_id,
+    post_id: newPost.post_id
+  });
   return newPost;
 }
 

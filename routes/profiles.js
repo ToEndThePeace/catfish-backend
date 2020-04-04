@@ -2,7 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const {
   addProfile,
-  getProfilesByInstanceId
+  getProfilesByInstanceId,
+  getProfileWithPosts
 } = require("../models/profileModel");
 const { findInstance } = require("../models/instanceModel");
 const upload = require("../utils/cloudinary");
@@ -15,8 +16,14 @@ router.use(bodyParser.json());
 // Should run automatically after a new instance is created (ideally)
 router.post("/:inst_id", upload.single("pic_url"), async (req, res) => {
   // Pull the instance id from parameter
-
   const inst_id = req.params.inst_id;
+  // Pull user_id from token
+  const user_id = 1;
+
+  const ref = {
+    instance_id: inst_id,
+    user_id
+  };
 
   // Pull profile information from the body
 
@@ -37,7 +44,7 @@ router.post("/:inst_id", upload.single("pic_url"), async (req, res) => {
         .status(400)
         .json({ errorMessage: "No instance of that id available" });
     } else {
-      addProfile(profile)
+      addProfile(profile, ref)
         .then(newProfile => {
           res.status(201).json(newProfile);
         })
@@ -68,7 +75,7 @@ router.get("/:inst_id", async (req, res) => {
 
   // Query the database to return an array of profile objects
 
-  // Verify game instance before storing data
+  // Verify game instance before pulling data
   try {
     const instance = await findInstance(inst_id);
 
@@ -95,7 +102,7 @@ router.get("/:inst_id", async (req, res) => {
 });
 
 // GET a profile by id within a game instance
-router.get("/:inst_id/:prof_id", (req, res) => {
+router.get("/:inst_id/:prof_id", async (req, res) => {
   // Pull parameters
   const inst_id = req.params.inst_id;
   const prof_id = req.params.prof_id;
@@ -108,8 +115,30 @@ router.get("/:inst_id/:prof_id", (req, res) => {
     // Then somehow pull the picture URL from our cloud storage?
   };
 
+  // Verify game instance before pulling data
+  try {
+    const instance = await findInstance(inst_id);
+
+    // Store the profile info in data_profiles
+    if (!instance || !instance.length) {
+      res
+        .status(400)
+        .json({ errorMessage: "No instance of that id available" });
+    } else {
+      getProfileWithPosts(prof_id)
+        .then(profile => {
+          res.status(200).json(profile);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
   // Send back the profile object in JSON
-  res.json(curProf);
+  //   res.json(curProf);
 
   /* 
         What this in reality needs to do is to query the db,
